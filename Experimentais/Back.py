@@ -17,3 +17,6 @@ def openPath(self, next=lambda: None):
     )
     with open('Experimentais/caminho.json', 'w') as f:
         f.write('{"Planilha": "' + planilha + '"}')
+        
+def addAluno():
+    print("Adicionar Aluno")

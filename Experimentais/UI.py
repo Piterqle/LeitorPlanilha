@@ -1,6 +1,6 @@
 import customtkinter as ctk
 import tkinter as tk
-from Back import openPath
+from Back import openPath, addAluno
 import datetime
 from tkcalendar import Calendar, DateEntry
 
@@ -9,6 +9,26 @@ class Janela(ctk.CTk):
         super().__init__()
 
         self.title("Leitor de Planilha")
+        
+        # Exemplo de dados
+        self.dados = [
+                ["Pedro Martins", "Musculação", "10/03/2026", "15/03/2026", "Segunda", "18:00", "(11) 91234-5678", "Matriculado"],
+                ["Ana Souza", "Pilates", "10/03/2026", "17/03/2026", "Quarta", "09:00", "(11) 98765-4321", "Pendente"],
+                ["Lucas Ferreira", "Funcional", "10/03/2026", "18/03/2026", "Quinta", "07:30", "(11) 99876-5432", "Em Andamento"],
+                ["Mariana Costa", "Cross Training", "10/03/2026", "20/03/2026", "Sexta", "19:00", "(11) 97654-3210", "Cancelado"],
+                ["João Silva", "Musculação", "10/03/2026", "16/03/2026", "Terça", "17:00", "(11) 93456-7890", "Matriculado"],
+                ["Pedro Martins", "Musculação", "10/03/2026", "15/03/2026", "Segunda", "18:00", "(11) 91234-5678", "Matriculado"],
+                ["Ana Souza", "Pilates", "10/03/2026", "17/03/2026", "Quarta", "09:00", "(11) 98765-4321", "Pendente"],
+                ["Lucas Ferreira", "Funcional", "10/03/2026", "18/03/2026", "Quinta", "07:30", "(11) 99876-5432", "Em Andamento"],
+                ["Mariana Costa", "Cross Training", "10/03/2026", "20/03/2026", "Sexta", "19:00", "(11) 97654-3210", "Cancelado"],
+                ["João Silva", "Musculação", "10/03/2026", "16/03/2026", "Terça", "17:00", "(11) 93456-7890", "Matriculado"],
+                ["Pedro Martins", "Musculação", "10/03/2026", "15/03/2026", "Segunda", "18:00", "(11) 91234-5678", "Matriculado"],
+                ["Ana Souza", "Pilates", "10/03/2026", "17/03/2026", "Quarta", "09:00", "(11) 98765-4321", "Pendente"],
+                ["Lucas Ferreira", "Funcional", "10/03/2026", "18/03/2026", "Quinta", "07:30", "(11) 99876-5432", "Em Andamento"],
+                ["Mariana Costa", "Cross Training", "10/03/2026", "20/03/2026", "Sexta", "19:00", "(11) 97654-3210", "Cancelado"],
+                ["João Silva", "Musculação", "10/03/2026", "16/03/2026", "Terça", "17:00", "(11) 93456-7890", "Matriculado"]
+            ]
+           
         self.home()
         
         #self.geometry("400x300")
@@ -18,18 +38,23 @@ class Janela(ctk.CTk):
 
         #self.button = ctk.CTkButton(self, text="Clique Aqui", command=lambda: openPath(self=self, next=lambda: self.home()))
         #self.button.pack(pady=10)
-        
+    # Função de Focus
     def on_focus_in(self, event):
         
         if isinstance(event.widget, ctk.CTkEntry):
             event.widget.configure(border_color="#1f6aa5")
 
     def on_focus_out(self, event):
+        if (event.widget.master == self.nameEntry and (event.widget.get() == "" or event.widget.get() == "Digite o nome do aluno") ):
+               print("Entrou")
+               self.dateNowEntry.delete(0, "end")
+
         
         if isinstance(event.widget, ctk.CTkEntry):
             event.widget.configure(border_color="gray")
 
     
+    # Função para abrir o calendário
     def open_calendar(self):
         
         self.top = tk.Toplevel(self)
@@ -42,8 +67,7 @@ class Janela(ctk.CTk):
         btn.pack(pady=10)
 
     
-    
-    
+    # Função para obter a data selecionada no calendário
     def get_date(self):
 
         data = self.cal.get_date()
@@ -52,6 +76,30 @@ class Janela(ctk.CTk):
         self.top.destroy()
 
     
+    # Função para Modificar a Cor do Status
+    def status_color(self, status):
+        
+        colors = {
+            "Matriculado": "#4CAF50",
+            "Pendente": "#FFC107",
+            "Em Andamento": "#2196F3",
+            "Cancelado": "#F44336"
+        }
+
+        base_color = colors.get(status, "#808080")
+    
+        badget = ctk.CTkLabel(self.frameLinhas, 
+                            text=status.upper(), 
+                            fg_color=base_color, 
+                            text_color="white", 
+                            corner_radius=20,
+                            width=100,
+                            height=30,
+                            font=("Segoe UI", 12, "bold"))
+    
+        return badget
+    
+    # Função para construir a interface da Home
     def home(self):
         for widget in self.winfo_children():
             widget.destroy()
@@ -75,7 +123,7 @@ class Janela(ctk.CTk):
 
         self.addLabel = ctk.CTkLabel(
             self.addContainer,
-            text="➕ Adicionar Aluno",
+            text="➕ Adicionar Aluno Experimental",
             font=("Arial", 15, "bold")
         )
         self.addLabel.pack(anchor="w", pady=(10,20))
@@ -146,7 +194,7 @@ class Janela(ctk.CTk):
         self.statusLabel = ctk.CTkLabel(self.entryContainer, text="Status", font=("Arial", 14))
         self.statusLabel.grid(row=0, column=6, sticky="w", padx=8, pady=(0,5))
 
-        self.statusEntry = ctk.CTkComboBox(self.entryContainer, values=["Confirmado", "Pendente", "Em Andamento" ,"Cancelado"])
+        self.statusEntry = ctk.CTkComboBox(self.entryContainer, values=["Matriculado", "Pendente", "Em Andamento" ,"Cancelado"])
         self.statusEntry.grid(row=1, column=6, padx=8, pady=(0,15), sticky="ew")
         
         #Focus automático
@@ -156,8 +204,81 @@ class Janela(ctk.CTk):
         self.statusEntry.bind("<Return>", lambda e: self.contactEntry.focus())
     
         
-        self.buttonAdd = ctk.CTkButton(self.addContainer, text="Adicionar Aluno",)# command=self.addAluno)
+        self.buttonAdd = ctk.CTkButton(self.addContainer, text="Adicionar Aluno", command=addAluno)
         self.buttonAdd.pack(pady=10, anchor="e")
+        
+        
+        # Frame da Tabela
+        self.tableContainer = ctk.CTkFrame(self, fg_color="transparent")
+        self.tableContainer.pack(padx=30, pady=25, fill="both", expand=True)
+        
+        
+        #Frame Filtro
+        self.frameFiltro = ctk.CTkFrame(self.tableContainer, fg_color="transparent")
+        self.frameFiltro.pack(anchor="e", pady=(0,10))
+        
+        
+        # Filtro
+        self.filtroLabel = ctk.CTkLabel(self.frameFiltro, text="Filtrar por:", font=("Arial", 16, "bold"))
+        self.filtroLabel.pack(anchor="w", pady=(0,10))
+        
+        self.filtroBox = ctk.CTkComboBox(self.frameFiltro, values=["📅 Hoje", "🕺 Modalidade"] , font=("Arial", 14, "bold"))
+        self.filtroBox.pack(anchor="e", pady=(0,10))
+        
+        
+        # Tabela de Alunos
+        self.table = ctk.CTkFrame(self.tableContainer, fg_color="transparent")
+        self.table.pack(fill="both", expand=True)
+        
+
+        # Criando os Headers da Tabela
+        self.headers = ["Nome do Aluno", "Modalidade", "Data Atual", "Data Marcada", "Dia da Semana", "Horário", "Contato", "Status"]
+          
+          
+        # Frame Headers
+        self.frameHeaders = ctk.CTkFrame(self.table)
+        self.frameHeaders.pack(fill="x")
+        
+        
+        # Frame Linhas
+        self.frameLinhas = ctk.CTkScrollableFrame(self.table)
+        self.frameLinhas.pack(fill="both", expand=True)
+        
+        
+        for i in range(8):
+            self.frameHeaders.grid_columnconfigure(i, weight=1, uniform="col")
+            self.frameLinhas.grid_columnconfigure(i, weight=1, uniform="col")
+        
+        for i, header in enumerate(self.headers):
+            label = ctk.CTkLabel(self.frameHeaders, text=header, font=("Arial", 14, "bold"))
+            label.grid(row=0, column=i, padx=5, pady=5)
+            
+            
+        # Criação de Linhas
+        if(len(self.dados) > 0):
+            for i, row in enumerate(self.dados, start=1):
+                label_nome = ctk.CTkLabel(self.frameLinhas, text=row[0].upper())
+                label_nome.grid(row=i, column=0, padx=5, pady=5)
+                
+                label_modalidade = ctk.CTkLabel(self.frameLinhas, text=row[1])
+                label_modalidade.grid(row=i, column=1, padx=5, pady=5)
+                
+                label_dataAtual = ctk.CTkLabel(self.frameLinhas, text=row[2])
+                label_dataAtual.grid(row=i, column=2, padx=5, pady=5)
+                
+                label_dataMarcada = ctk.CTkLabel(self.frameLinhas, text=row[3])
+                label_dataMarcada.grid(row=i, column=3, padx=5, pady=5)
+                
+                label_diaSemana = ctk.CTkLabel(self.frameLinhas, text=row[4])
+                label_diaSemana.grid(row=i, column=4, padx=5, pady=5)
+                
+                label_horario = ctk.CTkLabel(self.frameLinhas, text=row[5])
+                label_horario.grid(row=i, column=5, padx=5, pady=5)
+                
+                label_contato = ctk.CTkLabel(self.frameLinhas, text=row[6])
+                label_contato.grid(row=i, column=6, padx=5, pady=5)
+                
+                self.status_color(row[7]).grid(row=i, column=7, padx=5, pady=5)
 
         
     
