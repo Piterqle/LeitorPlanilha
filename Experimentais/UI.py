@@ -243,17 +243,25 @@ class Janela(ctk.CTk):
         # Frame Linhas
         self.frameLinhas = ctk.CTkScrollableFrame(self.table)
         self.frameLinhas.pack(fill="both", expand=True)
+        self.frameLinhas._parent_canvas.configure(highlightthickness=0)
         
-        
-        for i in range(8):
+
+        for i, header in enumerate(self.headers):
             self.frameHeaders.grid_columnconfigure(i, weight=1, uniform="col")
             self.frameLinhas.grid_columnconfigure(i, weight=1, uniform="col")
         
-        for i, header in enumerate(self.headers):
-            label = ctk.CTkLabel(self.frameHeaders, text=header, font=("Arial", 14, "bold"))
-            label.grid(row=0, column=i, padx=5, pady=5)
-            
-            
+            label = ctk.CTkLabel(self.frameHeaders, 
+                                 text=header, 
+                                 font=("Arial", 14, "bold"), 
+                                 anchor="center")
+            label.grid(row=0, column=i, padx=5, pady=5, sticky="ew")
+        
+        self.frameHeaders.grid_columnconfigure(len(self.headers), weight=0, minsize=16) 
+
+        # Crie um label vazio ou frame transparente para ocupar esse espaço
+        spacer = ctk.CTkLabel(self.frameHeaders, text="", width=16)
+        spacer.grid(row=0, column=len(self.headers))
+        
         # Criação de Linhas
         if(len(self.dados) > 0):
             for i, row in enumerate(self.dados, start=1):
