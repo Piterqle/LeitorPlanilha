@@ -252,41 +252,41 @@ class Janela(ctk.CTk):
         
             label = ctk.CTkLabel(self.frameHeaders, 
                                  text=header, 
-                                 font=("Arial", 14, "bold"), 
-                                 anchor="center")
-            label.grid(row=0, column=i, padx=5, pady=5, sticky="ew")
+                                 font=("Arial", 15, "bold"), 
+                                 anchor="w")
+            label.grid(row=0, column=i, padx=(15, 5), pady=5, sticky="ew")
         
-        self.frameHeaders.grid_columnconfigure(len(self.headers), weight=0, minsize=16) 
+        self.frameHeaders.grid_columnconfigure(len(self.headers), weight=0, minsize=14) 
 
         # Crie um label vazio ou frame transparente para ocupar esse espaço
-        spacer = ctk.CTkLabel(self.frameHeaders, text="", width=16)
+        spacer = ctk.CTkLabel(self.frameHeaders, text="", width=14)
         spacer.grid(row=0, column=len(self.headers))
         
         # Criação de Linhas
         if(len(self.dados) > 0):
             for i, row in enumerate(self.dados, start=1):
-                label_nome = ctk.CTkLabel(self.frameLinhas, text=row[0].upper())
-                label_nome.grid(row=i, column=0, padx=5, pady=5)
+                label_nome = ctk.CTkLabel(self.frameLinhas, text=row[0].upper(),anchor="w")
+                label_nome.grid(row=i, column=0, padx=(15, 5), pady=5, sticky="ew")
                 
-                label_modalidade = ctk.CTkLabel(self.frameLinhas, text=row[1])
-                label_modalidade.grid(row=i, column=1, padx=5, pady=5)
+                label_modalidade = ctk.CTkLabel(self.frameLinhas, text=row[1], anchor="w")
+                label_modalidade.grid(row=i, column=1, padx=(15, 5), pady=5, sticky="ew")
                 
-                label_dataAtual = ctk.CTkLabel(self.frameLinhas, text=row[2])
-                label_dataAtual.grid(row=i, column=2, padx=5, pady=5)
+                label_dataAtual = ctk.CTkLabel(self.frameLinhas, text=row[2], anchor="w")
+                label_dataAtual.grid(row=i, column=2, padx=(15, 5),  pady=5, sticky="ew")
                 
-                label_dataMarcada = ctk.CTkLabel(self.frameLinhas, text=row[3])
-                label_dataMarcada.grid(row=i, column=3, padx=5, pady=5)
+                label_dataMarcada = ctk.CTkLabel(self.frameLinhas, text=row[3], anchor="w")
+                label_dataMarcada.grid(row=i, column=3, padx=(15, 5), pady=5, sticky="ew")
                 
-                label_diaSemana = ctk.CTkLabel(self.frameLinhas, text=row[4])
-                label_diaSemana.grid(row=i, column=4, padx=5, pady=5)
+                label_diaSemana = ctk.CTkLabel(self.frameLinhas, text=row[4], anchor="w")
+                label_diaSemana.grid(row=i, column=4, padx=(15, 5), pady=5, sticky="ew")
                 
-                label_horario = ctk.CTkLabel(self.frameLinhas, text=row[5])
-                label_horario.grid(row=i, column=5, padx=5, pady=5)
+                label_horario = ctk.CTkLabel(self.frameLinhas, text=row[5], anchor="w")
+                label_horario.grid(row=i, column=5, padx=(15, 5), pady=5, sticky="ew") 
                 
-                label_contato = ctk.CTkLabel(self.frameLinhas, text=row[6])
-                label_contato.grid(row=i, column=6, padx=5, pady=5)
+                label_contato = ctk.CTkLabel(self.frameLinhas, text=row[6], anchor="w")
+                label_contato.grid(row=i, column=6, padx=(15, 5), pady=5, sticky="ew")
                 
-                self.status_color(row[7]).grid(row=i, column=7, padx=5, pady=5)
+                self.status_color(row[7]).grid(row=i, column=7, padx=(15, 5), pady=5, sticky="ew")
 
         
     
