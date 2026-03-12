@@ -1,9 +1,9 @@
 import customtkinter as ctk
 import tkinter as tk
-from Back import openPath, addAluno
-import datetime
+from Back import openPath, addAluno, savePath
 from tkcalendar import Calendar, DateEntry
 from datetime import datetime
+
 
 class Janela(ctk.CTk):
     def __init__(self):
@@ -13,14 +13,21 @@ class Janela(ctk.CTk):
         
         self.dias_pt = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"]
     
+        self.dados = openPath(self=self)
+         
+        if self.dados:
+            self.home()
+            return 
         
         self.geometry("400x300")
 
         self.label = ctk.CTkLabel(self, text="Selecione a planilha para começar.")
         self.label.pack(pady=20)
 
-        self.button = ctk.CTkButton(self, text="Clique Aqui", command=lambda: openPath(self=self, next=lambda dados: self.home(dados=dados)))
+        self.button = ctk.CTkButton(self, text="Clique Aqui", command=lambda: (savePath(self=self), self.label.configure(text="Planilha carregada com sucesso!"), self.button.pack_forget(), self.home()))
         self.button.pack(pady=10)
+    
+    
     # Função de Focus
     def on_focus_in(self, event):
         
@@ -43,7 +50,7 @@ class Janela(ctk.CTk):
         self.top = tk.Toplevel(self)
         self.top.title("Selecionar Data")
 
-        self.cal = Calendar(self.top, selectmode="day", date_pattern="dd/mm/yyyy")
+        self.cal = Calendar(self.top, selectmode="day", year=datetime.now().year, month=datetime.now().month, day=datetime.now().day, date_pattern="dd/mm/yyyy")
         self.cal.pack(padx=20, pady=20)
 
         btn = ctk.CTkButton(self.top, text="Selecionar", command=self.get_date)
@@ -82,8 +89,44 @@ class Janela(ctk.CTk):
     
         return badget
     
+    # Criação de Linhas
+    def createRows(self):
+        self.dados = openPath(self=self);
+        if(len(self.dados) > 0):
+            for sheet_name, rows in self.dados.items():
+                print(f"==== {sheet_name} ====")
+                for i, row in enumerate(rows):
+                    
+                    #if row[2].strftime("%d/%m/%Y") == datetime.now().strftime("%d/%m/%Y"):
+                        
+                        label_nome = ctk.CTkLabel(self.frameLinhas, text=row[0].upper()[:20] + "..." if len(row[0]) > 20 else row[0].upper(), anchor="w")
+                        label_nome.grid(row=i, column=0, padx=(15, 5), pady=5, sticky="ew")
+                        
+                        label_modalidade = ctk.CTkLabel(self.frameLinhas, text=sheet_name.capitalize(), anchor="w")
+                        label_modalidade.grid(row=i, column=1, padx=(15, 5), pady=5, sticky="ew")
+                        
+                        # Verificando se row[1] é datetime ou string
+                        label_dataAtual = ctk.CTkLabel(self.frameLinhas, text=row[1].strftime("%d/%m/%Y") if isinstance(row[1], datetime) else row[1], anchor="w")
+                        label_dataAtual.grid(row=i, column=2, padx=(15, 5),  pady=5, sticky="ew")
+                        
+                        # Verificando se row[2] é datetime ou string
+                        label_dataMarcada = ctk.CTkLabel(self.frameLinhas, text=row[2].strftime("%d/%m/%Y") if isinstance(row[2], datetime) else row[2], anchor="w")
+                        label_dataMarcada.grid(row=i, column=3, padx=(15, 5), pady=5, sticky="ew")
+                        
+                        # Label para o dia da semana, verificando se row[2] é datetime ou string
+                        label_diaSemana = ctk.CTkLabel(self.frameLinhas, text=self.dias_pt[row[2].weekday()] if isinstance(row[2], datetime) else self.dias_pt[datetime.strptime(row[2], "%d/%m/%Y").weekday()], anchor="w")
+                        label_diaSemana.grid(row=i, column=4, padx=(15, 5), pady=5, sticky="ew")
+                        
+                        label_horario = ctk.CTkLabel(self.frameLinhas, text=row[3], anchor="w")
+                        label_horario.grid(row=i, column=5, padx=(15, 5), pady=5, sticky="ew") 
+                        
+                        label_contato = ctk.CTkLabel(self.frameLinhas, text=row[4], anchor="w")
+                        label_contato.grid(row=i, column=6, padx=(15, 5), pady=5, sticky="ew")
+                    
+                        self.status_color(row[5]).grid(row=i, column=7, padx=(15, 5), pady=5, sticky="ew")
+    
     # Função para construir a interface da Home
-    def home(self, dados):
+    def home(self):
         for widget in self.winfo_children():
             widget.destroy()
 
@@ -127,7 +170,7 @@ class Janela(ctk.CTk):
         self.nameEntry = ctk.CTkEntry(self.entryContainer, placeholder_text="Digite o nome do aluno")
         self.nameEntry.grid(row=1, column=0, padx=8, pady=(0,15), sticky="ew")
 
-        self.nameEntry.bind("<FocusIn>", lambda e: (self.on_focus_in(e), self.dateNowEntry.insert(0, datetime.datetime.now().strftime("%d/%m/%Y"))))
+        self.nameEntry.bind("<FocusIn>", lambda e: (self.on_focus_in(e), self.dateNowEntry.insert(0, datetime.now().strftime("%d/%m/%Y"))))
         self.nameEntry.bind("<FocusOut>", lambda e: self.on_focus_out(e))
 
 
@@ -135,7 +178,7 @@ class Janela(ctk.CTk):
         self.modalidadeLabel = ctk.CTkLabel(self.entryContainer, text="Modalidade", font=("Arial", 14))
         self.modalidadeLabel.grid(row=0, column=1, sticky="w", padx=8, pady=(0,5))
 
-        self.modalidadeEntry = ctk.CTkComboBox(self.entryContainer, values=["Ballet", "Jazz", "Contemporâneo", "Hip Hop", "Salsa"])
+        self.modalidadeEntry = ctk.CTkComboBox(self.entryContainer, values=["Pole", "Jazz", "Flamenco", "Salão", "Castanholas"])
         self.modalidadeEntry.grid(row=1, column=1, padx=8, pady=(0,15), sticky="ew")
 
 
@@ -187,7 +230,16 @@ class Janela(ctk.CTk):
         self.statusEntry.bind("<Return>", lambda e: self.contactEntry.focus())
     
         
-        self.buttonAdd = ctk.CTkButton(self.addContainer, text="Adicionar Aluno", command=addAluno)
+        self.buttonAdd = ctk.CTkButton(self.addContainer, text="Adicionar Aluno", command=lambda: addAluno(
+            self.nameEntry.get(),
+            self.modalidadeEntry.get(),
+            self.dateNowEntry.get(),
+            self.dateMarkedEntry.get(),
+            self.timeEntry.get(),
+            self.contactEntry.get(),
+            self.statusEntry.get(),
+            self.createRows()
+        ))
         self.buttonAdd.pack(pady=10, anchor="e")
         
         
@@ -245,37 +297,8 @@ class Janela(ctk.CTk):
         spacer = ctk.CTkLabel(self.frameHeaders, text="", width=14)
         spacer.grid(row=0, column=len(self.headers))
         
-
-        # Criação de Linhas
-        if(len(dados) > 0):
-            for sheet_name, rows in dados.items():
-                print(f"==== {sheet_name} ====")
-                for i, row in enumerate(rows):
-                    
-                    if row[2].strftime("%d/%m/%Y") == datetime.now().strftime("%d/%m/%Y"):
-                        
-                        label_nome = ctk.CTkLabel(self.frameLinhas, text=row[0].upper()[:20] + "..." if len(row[0]) > 20 else row[0].upper(), anchor="w")
-                        label_nome.grid(row=i, column=0, padx=(15, 5), pady=5, sticky="ew")
-                        
-                        label_modalidade = ctk.CTkLabel(self.frameLinhas, text=sheet_name, anchor="w")
-                        label_modalidade.grid(row=i, column=1, padx=(15, 5), pady=5, sticky="ew")
-                        
-                        label_dataAtual = ctk.CTkLabel(self.frameLinhas, text=row[1].strftime("%d/%m/%Y"), anchor="w")
-                        label_dataAtual.grid(row=i, column=2, padx=(15, 5),  pady=5, sticky="ew")
-                        
-                        label_dataMarcada = ctk.CTkLabel(self.frameLinhas, text=row[2].strftime("%d/%m/%Y"), anchor="w")
-                        label_dataMarcada.grid(row=i, column=3, padx=(15, 5), pady=5, sticky="ew")
-                        
-                        label_diaSemana = ctk.CTkLabel(self.frameLinhas, text=self.dias_pt[row[2].weekday()], anchor="w")
-                        label_diaSemana.grid(row=i, column=4, padx=(15, 5), pady=5, sticky="ew")
-                        
-                        label_horario = ctk.CTkLabel(self.frameLinhas, text=row[3], anchor="w")
-                        label_horario.grid(row=i, column=5, padx=(15, 5), pady=5, sticky="ew") 
-                        
-                        label_contato = ctk.CTkLabel(self.frameLinhas, text=row[4], anchor="w")
-                        label_contato.grid(row=i, column=6, padx=(15, 5), pady=5, sticky="ew")
-                    
-                        self.status_color(row[5]).grid(row=i, column=7, padx=(15, 5), pady=5, sticky="ew")
+        self.createRows()
+        
 
         
     
