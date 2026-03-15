@@ -1,7 +1,8 @@
 from tkinter import ttk
 import customtkinter as ctk
 import tkinter as tk
-from Back import openPath, addAluno, savePath
+from Back import openPath, savePath
+from GUI.Home.BackHome import addAluno
 from tkcalendar import Calendar, DateEntry
 from datetime import datetime
 
@@ -15,7 +16,6 @@ class Home(ctk.CTk):
         
         self.dias_pt = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"]
         self.home()
-    
     
     
     # Função de Focus
@@ -125,7 +125,7 @@ class Home(ctk.CTk):
     
     # Função para construir a interface da Home
     def home(self):
-        self.root.geometry("1200x720")
+        
 
         # Header
         self.header = ctk.CTkFrame(self.root, height=50, fg_color="transparent", border_width=1, corner_radius=0)
@@ -133,14 +133,14 @@ class Home(ctk.CTk):
 
         self.header_label = ctk.CTkLabel(
             self.header,
-            text="💃 Escola Maiher Menezes",
+            text="Planilha Alunos Experimentais",
             font=("Arial", 22, "bold")
         )
         self.header_label.pack(pady=10, padx=20 , anchor="w")
 
 
         self.addContainer = ctk.CTkFrame(self.root, fg_color="transparent")
-        self.addContainer.pack(padx=30, pady=25, fill="x", )
+        self.addContainer.pack(padx=30, pady=10 , fill="x", )
 
         self.addLabel = ctk.CTkLabel(
             self.addContainer,
@@ -226,7 +226,7 @@ class Home(ctk.CTk):
         self.statusEntry.bind("<Return>", lambda e: self.contactEntry.focus())
     
         
-        self.buttonAdd = ctk.CTkButton(self.entryContainer, text="Adicionar Aluno", command=lambda: addAluno(
+        self.buttonAdd = ctk.CTkButton(self.entryContainer, text="Adicionar Aluno", height=30, command=lambda: addAluno(
             self.nameEntry.get(),
             self.modalidadeEntry.get(),
             self.dateNowEntry.get(),
@@ -238,13 +238,45 @@ class Home(ctk.CTk):
         ))
         self.buttonAdd.grid(row=3, column=3, padx=8, pady=(0,15), sticky="ew")
         
+        # Separador do Edit
+        seperator = ctk.CTkFrame(self.entryContainer, height=1, bg_color="gray", fg_color="white")
+        seperator.grid(row=4, column=0, columnspan=9, sticky="ew", padx=10, pady=(0,9))
+     
+        
+        # Label do ID     
+        self.IdLabel = ctk.CTkLabel(self.entryContainer, text="ID do Aluno")
+        self.IdLabel.grid(row=5, column=0, padx=8, pady=(0,5), sticky="w", )
+        
+        
+        # Entry ID para Edit/Delete
+        self.IdEntry = ctk.CTkEntry(self.entryContainer, placeholder_text="Digite o ID", height=30)
+        self.IdEntry.grid(row=6, column=0, padx=8, pady=(0,15), sticky="ew")
+        
+        
+        entryList = [self.nameEntry.get(),
+            self.modalidadeEntry.get(),
+            self.dateNowEntry.get(),
+            self.dateMarkedEntry.get(),
+            self.timeEntry.get(),
+            self.contactEntry.get(),
+            self.statusEntry.get()]
+        
+        # Button Edit 
+        self.buttonEdit = ctk.CTkButton(self.entryContainer, text="Editar Aluno", height=30, fg_color="#d4b350", hover_color="#b38600")
+        self.buttonEdit.grid(row=6, column=1, padx=8, pady=(0,15), sticky="ew")
+        
+        
+        # Button Edit 
+        self.buttonEdit = ctk.CTkButton(self.entryContainer, text="Deletar Aluno", height=30, fg_color="#ab3027", hover_color="#75201a")
+        self.buttonEdit.grid(row=6, column=2, padx=8, pady=(0,15), sticky="ew")
+           
         
         # Frame da Tabela
         self.tableContainer = ctk.CTkFrame(self.root, fg_color="transparent")
         self.tableContainer.pack(padx=30, pady=25, fill="both", expand=True)
         
         
-        #Frame Filtro
+        # Frame Filtro
         self.frameFiltro = ctk.CTkFrame(self.tableContainer, fg_color="transparent", border_width=2, border_color="gray")
         self.frameFiltro.pack(anchor="e", pady=(0,10))
         
