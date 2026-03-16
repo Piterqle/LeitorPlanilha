@@ -2,7 +2,7 @@ from tkinter import ttk
 import customtkinter as ctk
 import tkinter as tk
 from Back import openPath, savePath
-from GUI.Home.BackHome import addAluno
+from GUI.Home.BackHome import addAluno, editAluno
 from tkcalendar import Calendar, DateEntry
 from datetime import datetime
 
@@ -253,16 +253,17 @@ class Home(ctk.CTk):
         self.IdEntry.grid(row=6, column=0, padx=8, pady=(0,15), sticky="ew")
         
         
-        entryList = [self.nameEntry.get(),
-            self.modalidadeEntry.get(),
-            self.dateNowEntry.get(),
-            self.dateMarkedEntry.get(),
-            self.timeEntry.get(),
-            self.contactEntry.get(),
-            self.statusEntry.get()]
+        entryList = [self.nameEntry,
+            self.modalidadeEntry,
+            self.dateNowEntry,
+            self.dateMarkedEntry,
+            self.timeEntry,
+            self.contactEntry,
+            self.statusEntry]
+        
         
         # Button Edit 
-        self.buttonEdit = ctk.CTkButton(self.entryContainer, text="Editar Aluno", height=30, fg_color="#d4b350", hover_color="#b38600")
+        self.buttonEdit = ctk.CTkButton(self.entryContainer, text="Editar Aluno", height=30, fg_color="#d4b350", hover_color="#b38600", command=lambda: editAluno(self.dados, self.IdEntry.get(), entryList))
         self.buttonEdit.grid(row=6, column=1, padx=8, pady=(0,15), sticky="ew")
         
         

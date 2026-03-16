@@ -3,7 +3,7 @@ import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter, range_boundaries
 from datetime import datetime
-
+import customtkinter as ctk
 
 def insert_Str(liststr , insert_format):
     insert_format.sort(key=lambda x: x[0], reverse=True)
@@ -56,5 +56,21 @@ def addAluno(aluno, modalidade, data_marcada, data_experiencia, horario, contato
         print("Erro ao adicionar aluno:", e)
         return
     
-def editAluno(entrys):
+def editAluno(dados, id, entrys):
+    if id.isalpha():
+        print("ID não contem Letras")
+        return
+    
+    if not dados['POLE'][int(id)]:
+        print("Verifique o ID do usário")
+        return
+    
+        
+    for i in range(len(entrys)):
+        print(dados['POLE'][int(id)-1][i])
+        if isinstance(entrys[i], ctk.CTkEntry):
+            entrys[i].insert(0, dados['POLE'][int(id)-1][i])
+        elif isinstance(entrys[i], ctk.CTkComboBox):
+            entrys[i].set(dados['POLE'][int(id)-1][i])
+    
     
