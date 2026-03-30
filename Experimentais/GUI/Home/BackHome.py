@@ -12,6 +12,7 @@ def insert_Str(liststr , insert_format):
         liststr.insert(index, text)
     
     return "".join(liststr)
+
 def addAluno(aluno, modalidade, data_marcada, data_experiencia, horario, contato, status, next):
     try:
         
@@ -61,16 +62,11 @@ def editAluno(dados, id, entrys):
         print("ID não contem Letras")
         return
     
-    if not dados['POLE'][int(id)]:
-        print("Verifique o ID do usário")
-        return
-    
         
     for i in range(len(entrys)):
-        print(dados['POLE'][int(id)-1][i])
         if isinstance(entrys[i], ctk.CTkEntry):
-            entrys[i].insert(0, dados['POLE'][int(id)-1][i])
+            entrys[i].insert(0, dados[int(id)-1][i])
         elif isinstance(entrys[i], ctk.CTkComboBox):
-            entrys[i].set(dados['POLE'][int(id)-1][i])
+            entrys[i].set(dados[int(id)-1][i])
     
     

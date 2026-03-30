@@ -18,9 +18,16 @@ def openPath(self):
                 planilha = pd.ExcelFile(caminho["Planilha"])
                 dados = pd.read_excel(caminho["Planilha"], sheet_name=None)
                 
-                dados = {sheet: data.values.tolist() for sheet, data in dados.items() if data.columns.tolist() == ["Aluno", "Data Marcada",'Data de Experiencia', 'Horário', 'Contato', 'Status' ]}
-
-                return dados
+                dadosFormatados = []
+                for sheet, data in dados.items():
+                    if data.columns.tolist() == ["Aluno", "Data Marcada", "Data de Experiencia", "Horário", "Contato", "Status"]:
+                        for linha in data.values.tolist():
+                            linha.insert(1, sheet)
+                            dadosFormatados.append(linha)
+                            
+                print(dadosFormatados)
+                
+                return dadosFormatados
             else:
                 self.label.configure(text="Nenhum caminho encontrado.")
                 return None

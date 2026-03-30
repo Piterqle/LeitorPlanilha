@@ -15,7 +15,6 @@ class Janela(ctk.CTk):
         
         self.geometry("1380x720")
     
-        self.dados = openPath(self=self)
         
         
         self.dashboard = ctk.CTkFrame(self, width=230)
@@ -23,10 +22,9 @@ class Janela(ctk.CTk):
         
         self.root = ctk.CTkFrame(self, fg_color="transparent")
         self.root.pack(fill="both", expand=True)
-        if self.dados:
-            Home(root=self.root, dados=self.dados)
-            return 
-        
+
+        Home(root=self.root)
+           
         
 
         #self.label = ctk.CTkLabel(self, text="Selecione a planilha para começar.")
