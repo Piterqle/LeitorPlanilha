@@ -260,14 +260,15 @@ class Home(ctk.CTk):
         
         
         # Button Edit 
-        self.buttonEdit = ctk.CTkButton(self.entryContainer, text="Editar Aluno", height=30, fg_color="#d4b350", hover_color="#b38600", command=lambda: editAluno(self.dados, self.IdEntry.get(), entryList))
+        self.buttonEdit = ctk.CTkButton(self.entryContainer, text="Editar Aluno", height=30, fg_color="#d4b350", hover_color="#b38600", command=lambda: editAluno(self.dados, self.IdEntry.get(), entryList, listButtons))
         self.buttonEdit.grid(row=6, column=1, padx=8, pady=(0,15), sticky="ew")
         
         
-        # Button Edit 
-        self.buttonEdit = ctk.CTkButton(self.entryContainer, text="Deletar Aluno", height=30, fg_color="#ab3027", hover_color="#75201a")
-        self.buttonEdit.grid(row=6, column=2, padx=8, pady=(0,15), sticky="ew")
+        # Button Delete 
+        self.buttonDelete = ctk.CTkButton(self.entryContainer, text="Deletar Aluno", height=30, fg_color="#ab3027", hover_color="#75201a")
+        self.buttonDelete.grid(row=6, column=2, padx=8, pady=(0,15), sticky="ew")
            
+        listButtons = [self.buttonEdit, self.buttonDelete]
         
         # Frame da Tabela
         self.tableContainer = ctk.CTkFrame(self.root, fg_color="transparent")

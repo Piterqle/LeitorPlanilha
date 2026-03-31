@@ -57,16 +57,42 @@ def addAluno(aluno, modalidade, data_marcada, data_experiencia, horario, contato
         print("Erro ao adicionar aluno:", e)
         return
     
-def editAluno(dados, id, entrys):
+def editAluno(dados, id, entrys, buttons):
     if id.isalpha():
         print("ID não contem Letras")
         return
     
-        
+    # Preencher os campos com os dados    
     for i in range(len(entrys)):
         if isinstance(entrys[i], ctk.CTkEntry):
+            entrys[i].delete(0, ctk.END)
             entrys[i].insert(0, dados[int(id)-1][i])
         elif isinstance(entrys[i], ctk.CTkComboBox):
             entrys[i].set(dados[int(id)-1][i])
     
+    buttons[0].configure(fg_color="#6eff74", hover_color="#3ad63a", command=lambda: saveEdit(dados, id, entrys, buttons))
     
+def saveEdit(dados, id, entrys, buttons):
+    try:
+        with open('Experimentais/caminho.json', 'r') as f:
+            caminho = f.read()
+            if caminho != "":
+                caminho = json.loads(caminho)
+                
+                workbook = load_workbook(caminho["Planilha"])
+                modalidade = entrys[1].get()
+                worksheet = workbook[modalidade.upper()]
+                
+                new_row = [entry.get() if isinstance(entry, ctk.CTkEntry) else entry.get() for entry in entrys]
+                
+                for col_num, value in enumerate(new_row, start=1):
+                    if col_num == 1: pass
+                    worksheet.cell(row=int(id)+1, column=col_num, value=value)
+                
+                workbook.save(caminho["Planilha"])
+                buttons[0].configure(fg_color="#d4b350", hover_color="#b38600", command=lambda: editAluno(dados, id, entrys, buttons))
+                
+    except Exception as e:
+        
+        print("Erro ao salvar edição do aluno:", e)
+        return    

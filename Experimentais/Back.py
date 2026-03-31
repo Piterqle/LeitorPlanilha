@@ -20,6 +20,7 @@ def openPath(self):
                 
                 dadosFormatados = []
                 for sheet, data in dados.items():
+                    data = data.loc[:, ~data.columns.str.contains('^Unnamed')]
                     if data.columns.tolist() == ["Aluno", "Data Marcada", "Data de Experiencia", "Horário", "Contato", "Status"]:
                         for linha in data.values.tolist():
                             linha.insert(1, sheet)
