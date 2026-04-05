@@ -2,7 +2,7 @@ from tkinter import ttk
 import customtkinter as ctk
 import tkinter as tk
 from Back import openPath, savePath
-from GUI.Home.BackHome import addAluno, editAluno
+from GUI.Home.BackHome import addAluno, editarAluno, deletarAluno
 from tkcalendar import Calendar, DateEntry
 from datetime import datetime
 
@@ -15,6 +15,7 @@ class Home(ctk.CTk):
         self.dados = openPath(self=self)
         
         self.dias_pt = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"]
+        
         self.home()
     
     
@@ -106,7 +107,7 @@ class Home(ctk.CTk):
                 label_dataMarcada.grid(row=linha, column=4, padx=(15, 5), pady=5, sticky="ew")
                 
                 # Label para o dia da semana, verificando se row[2] é datetime ou string
-                label_diaSemana = ctk.CTkLabel(self.frameLinhas, text=self.dias_pt[row[3].weekday()] if isinstance(row[3], datetime) else self.dias_pt[datetime.strptime(row[2], "%d/%m/%Y").weekday()], anchor="w")
+                label_diaSemana = ctk.CTkLabel(self.frameLinhas, text=self.dias_pt[row[3].weekday()] if isinstance(row[3], datetime) else self.dias_pt[datetime.strptime(row[3], "%d/%m/%Y").weekday()], anchor="w")
                 label_diaSemana.grid(row=linha, column=5, padx=(15, 5), pady=5, sticky="ew")
                 
                 label_horario = ctk.CTkLabel(self.frameLinhas, text=row[4], anchor="w")
@@ -260,12 +261,12 @@ class Home(ctk.CTk):
         
         
         # Button Edit 
-        self.buttonEdit = ctk.CTkButton(self.entryContainer, text="Editar Aluno", height=30, fg_color="#d4b350", hover_color="#b38600", command=lambda: editAluno(self.dados, self.IdEntry.get(), entryList, listButtons))
+        self.buttonEdit = ctk.CTkButton(self.entryContainer, text="Editar Aluno", height=30, fg_color="#d4b350", hover_color="#b38600", command=lambda: editarAluno(self.dados, self.IdEntry.get(), entryList, listButtons, self.createRows()))
         self.buttonEdit.grid(row=6, column=1, padx=8, pady=(0,15), sticky="ew")
         
         
         # Button Delete 
-        self.buttonDelete = ctk.CTkButton(self.entryContainer, text="Deletar Aluno", height=30, fg_color="#ab3027", hover_color="#75201a")
+        self.buttonDelete = ctk.CTkButton(self.entryContainer, text="Deletar Aluno", height=30, fg_color="#ab3027", hover_color="#75201a", command=lambda: deletarAluno(self.dados, self.IdEntry.get(), self.createRows()))
         self.buttonDelete.grid(row=6, column=2, padx=8, pady=(0,15), sticky="ew")
            
         listButtons = [self.buttonEdit, self.buttonDelete]

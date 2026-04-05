@@ -28,6 +28,8 @@ class Janela(ctk.CTk):
     def home(self):
 
         self.geometry("1380x720")
+        for widget in self.winfo_children():
+            widget.destroy()    
         self.dashboard = ctk.CTkFrame(self, width=230)
         self.dashboard.pack(side="left", fill="y")
         
