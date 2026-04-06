@@ -1,6 +1,6 @@
 import os
 from tkinter import ttk
-from GUI.Home.Home import Home
+from GUI.Home.view import Home
 import customtkinter as ctk
 import tkinter as tk
 from Back import openPath, savePath

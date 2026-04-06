@@ -2,7 +2,7 @@ from tkinter import ttk
 import customtkinter as ctk
 import tkinter as tk
 from Back import openPath, savePath
-from GUI.Home.BackHome import addAluno, editarAluno, deletarAluno
+from Controllers.alunoController import alunoController
 from tkcalendar import Calendar, DateEntry
 from datetime import datetime
 
@@ -224,16 +224,24 @@ class Home(ctk.CTk):
         self.statusEntry.bind("<Return>", lambda e: self.contactEntry.focus())
     
         
-        self.buttonAdd = ctk.CTkButton(self.entryContainer, text="Adicionar Aluno", height=30, command=lambda: addAluno(
-            self.nameEntry.get(),
-            self.modalidadeEntry.get(),
-            self.dateNowEntry.get(),
-            self.dateMarkedEntry.get(),
-            self.timeEntry.get(),
-            self.contactEntry.get(),
-            self.statusEntry.get(),
-            self.createRows()
+        self.buttonAdd = ctk.CTkButton(self.entryContainer, text="Adicionar Aluno", height=30, command=lambda: alunoController(
+            entrys=[
+                self.nameEntry,
+                self.modalidadeEntry,
+                self.dateNowEntry,
+                self.dateMarkedEntry,
+                self.timeEntry,
+                self.contactEntry,
+                self.statusEntry
+            ],
+            next=self.createRows()
         ))
+        self.buttonAdd.grid(row=3, column=3, padx=8, pady=(0,15), sticky="ew")
+        
+        # Separador do Edit
+        seperator = ctk.CTkFrame(self.entryContainer, height=1, bg_color="gray", fg_color="white")
+        seperator.grid(row=4, column=0, columnspan=9, sticky="ew", padx=10, pady=(0,9))
+    
         self.buttonAdd.grid(row=3, column=3, padx=8, pady=(0,15), sticky="ew")
         
         # Separador do Edit
@@ -261,12 +269,12 @@ class Home(ctk.CTk):
         
         
         # Button Edit 
-        self.buttonEdit = ctk.CTkButton(self.entryContainer, text="Editar Aluno", height=30, fg_color="#d4b350", hover_color="#b38600", command=lambda: editarAluno(self.dados, self.IdEntry.get(), entryList, listButtons, self.createRows()))
+        self.buttonEdit = ctk.CTkButton(self.entryContainer, text="Editar Aluno", height=30, fg_color="#d4b350", hover_color="#b38600", command=lambda: alunoController(dados=self.dados, id=self.IdEntry.get(), entrys=entryList, buttons=listButtons, next=self.createRows()).editarAluno())
         self.buttonEdit.grid(row=6, column=1, padx=8, pady=(0,15), sticky="ew")
         
         
         # Button Delete 
-        self.buttonDelete = ctk.CTkButton(self.entryContainer, text="Deletar Aluno", height=30, fg_color="#ab3027", hover_color="#75201a", command=lambda: deletarAluno(self.dados, self.IdEntry.get(), self.createRows()))
+        self.buttonDelete = ctk.CTkButton(self.entryContainer, text="Deletar Aluno", height=30, fg_color="#ab3027", hover_color="#75201a", command=lambda: alunoController(dados=self.dados, id=self.IdEntry.get(), next=self.createRows).deletarAluno())
         self.buttonDelete.grid(row=6, column=2, padx=8, pady=(0,15), sticky="ew")
            
         listButtons = [self.buttonEdit, self.buttonDelete]
