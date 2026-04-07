@@ -12,7 +12,7 @@ class Home(ctk.CTk):
     
     def __init__(self, root):
         self.root = root
-        self.dados = openPath(self=self)
+        self.dados = None
         
         self.dias_pt = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"]
         
@@ -92,31 +92,31 @@ class Home(ctk.CTk):
                 label_Id = ctk.CTkLabel(self.frameLinhas, text=i+1)
                 label_Id.grid(row=linha, column=0, padx=(15, 5), pady=5, sticky="ew")
                 
-                label_nome = ctk.CTkLabel(self.frameLinhas, text=row[0].upper()[:20] + "..." if len(row[0]) > 20 else row[0].upper(), anchor="w")
+                label_nome = ctk.CTkLabel(self.frameLinhas, text=row.nome.upper()[:20] + "..." if len(row.nome) > 20 else row.nome.upper(), anchor="w")
                 label_nome.grid(row=linha, column=1, padx=(15, 5), pady=5, sticky="ew")
                 
-                label_modalidade = ctk.CTkLabel(self.frameLinhas, text=row[1].capitalize(), anchor="w")
+                label_modalidade = ctk.CTkLabel(self.frameLinhas, text=row.modalidade.capitalize(), anchor="w")
                 label_modalidade.grid(row=linha, column=2, padx=(15, 5), pady=5, sticky="ew")
                 
                 # Verificando se row[2] é datetime ou string
-                label_dataAtual = ctk.CTkLabel(self.frameLinhas, text=row[2].strftime("%d/%m/%Y") if isinstance(row[2], datetime) else row[2], anchor="w")
+                label_dataAtual = ctk.CTkLabel(self.frameLinhas, text=row.data_marcada, anchor="w")
                 label_dataAtual.grid(row=linha, column=3, padx=(15, 5),  pady=5, sticky="ew")
                 
                 # Verificando se row[3] é datetime ou string
-                label_dataMarcada = ctk.CTkLabel(self.frameLinhas, text=row[3].strftime("%d/%m/%Y") if isinstance(row[3], datetime) else row[3], anchor="w")
+                label_dataMarcada = ctk.CTkLabel(self.frameLinhas, text=row.data_experiencia, anchor="w")
                 label_dataMarcada.grid(row=linha, column=4, padx=(15, 5), pady=5, sticky="ew")
                 
                 # Label para o dia da semana, verificando se row[2] é datetime ou string
-                label_diaSemana = ctk.CTkLabel(self.frameLinhas, text=self.dias_pt[row[3].weekday()] if isinstance(row[3], datetime) else self.dias_pt[datetime.strptime(row[3], "%d/%m/%Y").weekday()], anchor="w")
+                label_diaSemana = ctk.CTkLabel(self.frameLinhas, text=self.dias_pt[row.data_experiencia.weekday()] if isinstance(row.data_experiencia, datetime) else self.dias_pt[datetime.strptime(row.data_experiencia, "%d/%m/%Y").weekday()], anchor="w")
                 label_diaSemana.grid(row=linha, column=5, padx=(15, 5), pady=5, sticky="ew")
                 
-                label_horario = ctk.CTkLabel(self.frameLinhas, text=row[4], anchor="w")
+                label_horario = ctk.CTkLabel(self.frameLinhas, text=row.horario, anchor="w")
                 label_horario.grid(row=linha, column=6, padx=(15, 5), pady=5, sticky="ew") 
                 
-                label_contato = ctk.CTkLabel(self.frameLinhas, text=row[5], anchor="w")
+                label_contato = ctk.CTkLabel(self.frameLinhas, text=row.numero_telefone, anchor="w")
                 label_contato.grid(row=linha, column=7, padx=(15, 5), pady=5, sticky="ew")
             
-                self.status_color(row[6]).grid(row=linha, column=8, padx=(15, 5), pady=5, sticky="ew")
+                self.status_color(row.status).grid(row=linha, column=8, padx=(15, 5), pady=5, sticky="ew")
                 
                 seperator = ctk.CTkFrame(self.frameLinhas, height=1, bg_color="gray", fg_color="white")
                 seperator.grid(row=linha+1, column=0, columnspan=9, sticky="ew", padx=10, pady=(0,9))

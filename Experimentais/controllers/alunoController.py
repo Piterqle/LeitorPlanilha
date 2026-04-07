@@ -5,6 +5,7 @@ from openpyxl.utils import get_column_letter, range_boundaries
 from datetime import datetime
 import customtkinter as ctk
 
+
 def insert_Str(liststr , insert_format):
     insert_format.sort(key=lambda x: x[0], reverse=True)
     
@@ -74,13 +75,15 @@ class alunoController():
             print("ID não contem Letras")
             return
         
-        # Preencher os campos com os dados    
-        for i in range(len(self.entrys)):
+        
+        # Preencher os campos com os dados  
+        aluno = self.dados[int(self.id)-1]
+        for i, value in enumerate(aluno.__dict__.values()):
             if isinstance(self.entrys[i], ctk.CTkEntry):
                 self.entrys[i].delete(0, ctk.END)
-                self.entrys[i].insert(0, self.dados[int(self.id)-1][i])
+                self.entrys[i].insert(0, value)
             elif isinstance(self.entrys[i], ctk.CTkComboBox):
-                self.entrys[i].set(self.dados[int(self.id)-1][i])
+                self.entrys[i].set(value)
         
         self.buttons[0].configure(hover_color="#2a632c", fg_color="#3ad63a", text="Salvar",command=lambda: self.salvarEdicao())
         self.buttons[1].configure(text="Cancelar", command=lambda: self.cancelarEdicao())
