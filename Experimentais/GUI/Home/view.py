@@ -38,7 +38,7 @@ class Home(ctk.CTk):
     # Função para abrir o calendário
     def open_calendar(self):
         
-        self.top = tk.Toplevel(self)
+        self.top = tk.Toplevel(self.root)
         self.top.title("Selecionar Data")
 
         self.cal = Calendar(self.top, selectmode="day", year=datetime.now().year, month=datetime.now().month, day=datetime.now().day, date_pattern="dd/mm/yyyy")
@@ -234,8 +234,8 @@ class Home(ctk.CTk):
                 self.contactEntry,
                 self.statusEntry
             ],
-            next=self.createRows()
-        ))
+            next=self.createRows
+        ).addAluno())
         self.buttonAdd.grid(row=3, column=3, padx=8, pady=(0,15), sticky="ew")
         
         # Separador do Edit
@@ -269,7 +269,7 @@ class Home(ctk.CTk):
         
         
         # Button Edit 
-        self.buttonEdit = ctk.CTkButton(self.entryContainer, text="Editar Aluno", height=30, fg_color="#d4b350", hover_color="#b38600", command=lambda: alunoController(dados=self.dados, id=self.IdEntry.get(), entrys=entryList, buttons=listButtons, next=self.createRows()).editarAluno())
+        self.buttonEdit = ctk.CTkButton(self.entryContainer, text="Editar Aluno", height=30, fg_color="#d4b350", hover_color="#b38600", command=lambda: alunoController(dados=self.dados, id=self.IdEntry.get(), entrys=entryList, buttons=listButtons, next=self.createRows).editarAluno())
         self.buttonEdit.grid(row=6, column=1, padx=8, pady=(0,15), sticky="ew")
         
         

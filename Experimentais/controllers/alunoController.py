@@ -27,8 +27,7 @@ class alunoController():
     
     def addAluno(self):
         try:
-            
-            [aluno, modalidade, data_marcada, data_experiencia, horario, contato, status] = [value for value in self.entrys.get()]
+            [aluno, modalidade, data_marcada, data_experiencia, horario, contato, status] = [value.get() for value in self.entrys]
             if [aluno, modalidade, data_marcada, data_experiencia, horario, contato, status].count("") > 0:
                 print("Preencha todos os campos.")
                 return
@@ -46,7 +45,7 @@ class alunoController():
                 list(contato)
                 insert_format = [(10, "-")]
                 contato = insert_Str(liststr, insert_format)
-            
+
             with open('Experimentais/caminho.json', 'r') as f:
                 caminho = f.read()
                 if caminho != "":
@@ -63,7 +62,7 @@ class alunoController():
                         table.ref = f"A1:F{worksheet.max_row}"
 
                     workbook.save(caminho["Planilha"])
-                    next()
+                    self.next()
                     
         except Exception as e:
             
@@ -135,17 +134,18 @@ class alunoController():
                     caminho = json.loads(caminho)
                     
                     workbook = load_workbook(caminho["Planilha"])
-                    modalidade = self.dados[int(self.id)-1][1]
+                    modalidade = self.dados[int(self.id)-1].modalidade
                     worksheet = workbook[modalidade.upper()]
                     
-                    worksheet.delete_rows(int(self.id)+1)
+                    worksheet.delete_rows(int(self.dados[int(self.id)-1].row))
                     
                     if worksheet.tables:
                         table = list(worksheet.tables.values())[0]
                         table.ref = f"A1:F{worksheet.max_row}"
                     
                     workbook.save(caminho["Planilha"])
-                    
+                self.next()
+         
         except Exception as e:
             
             print("Erro ao excluir aluno:", e)
