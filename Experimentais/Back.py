@@ -35,7 +35,7 @@ def openPath(self):
                             )
                             dadosFormatados.append(aluno)
                             
-                print(dadosFormatados)
+                
                 
                 return dadosFormatados
             else:

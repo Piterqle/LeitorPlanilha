@@ -77,12 +77,15 @@ class alunoController():
         
         # Preencher os campos com os dados  
         aluno = self.dados[int(self.id)-1]
-        for i, value in enumerate(aluno.__dict__.values()):
+        for i, value in enumerate(aluno.__dict__.values()): 
+            
+            if i == 7: break; # Ignorar o campo row
+            
             if isinstance(self.entrys[i], ctk.CTkEntry):
                 self.entrys[i].delete(0, ctk.END)
                 self.entrys[i].insert(0, value)
             elif isinstance(self.entrys[i], ctk.CTkComboBox):
-                self.entrys[i].set(value)
+                self.entrys[i].set(value.capitalize())
         
         self.buttons[0].configure(hover_color="#2a632c", fg_color="#3ad63a", text="Salvar",command=lambda: self.salvarEdicao())
         self.buttons[1].configure(text="Cancelar", command=lambda: self.cancelarEdicao())
@@ -98,13 +101,36 @@ class alunoController():
                     modalidade = self.entrys[1].get()
                     worksheet = workbook[modalidade.upper()]
                     
-                    new_row = [entry.get() if isinstance(entry, ctk.CTkEntry) else entry.get() for entry in self.entrys]
+                    new_row = []
+                    
+                    for i, entry in enumerate(self.entrys):
+                        
+                        if i == 7: break; # Ignorar o campo row
+                        if i == 1: continue; # Ignorar o campo modalidade
+                        
+                        if isinstance(entry, ctk.CTkEntry):
+                            if entry.get() == "":
+                                print("Preencha todos os campos.")
+                                return
+                            new_row.append(entry.get())
+                        elif isinstance(entry, ctk.CTkComboBox):
+                            if entry.get() == "":
+                                print("Preencha todos os campos.")
+                                return
+                            new_row.append(entry.get())
+                    
                     
                     for col_num, value in enumerate(new_row, start=1):
                         if col_num == 1: pass
-                        worksheet.cell(row=int(self.id)+1, column=col_num, value=value)
+                        worksheet.cell(row=self.dados[int(self.id)-1].row, column=col_num, value=value)
                     
                     workbook.save(caminho["Planilha"])
+                    self.next()
+            
+                    for entry in self.entrys:
+                        if isinstance(entry, ctk.CTkEntry):
+                            entry.delete(0, ctk.END)
+                
                     self.buttons[1].configure(text="Excluir", command=lambda: self.deletarAluno())
                     self.buttons[0].configure(fg_color="#d4b350", hover_color="#b38600", text="Editar",command=lambda: self.editarAluno())
                     
@@ -119,7 +145,7 @@ class alunoController():
                 entry.delete(0, ctk.END)
 
         self.buttons[1].configure(text="Excluir", command=lambda: self.deletarAluno(self.dados, self.id))
-        self.buttons[0].configure(text="Editar", fg_color="#d4b350", hover_color="#b38600")
+        self.buttons[0].configure(text="Editar", fg_color="#d4b350", hover_color="#b38600", command=lambda: self.editarAluno())
         
         
     def deletarAluno(self):
