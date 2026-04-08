@@ -14,7 +14,7 @@ class Home(ctk.CTk):
         self.dados = None
         
         self.dias_pt = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"]
-        
+        self.modalidadeList = openPath(self=self, model=True)
         self.home()
     
     
@@ -170,7 +170,7 @@ class Home(ctk.CTk):
         self.modalidadeLabel = ctk.CTkLabel(self.entryContainer, text="Modalidade", font=("Arial", 14))
         self.modalidadeLabel.grid(row=0, column=1, sticky="w", padx=8, pady=(0,5))
 
-        self.modalidadeEntry = ctk.CTkComboBox(self.entryContainer, values=["Pole", "Jazz", "Flamenco", "Salão", "Castanholas"],  height=30)
+        self.modalidadeEntry = ctk.CTkComboBox(self.entryContainer, values=self.modalidadeList,  height=30)
         self.modalidadeEntry.grid(row=1, column=1, padx=8, pady=(0,15), sticky="ew")
 
 

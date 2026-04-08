@@ -37,6 +37,7 @@ class Janela(ctk.CTk):
         self.dashboard = ctk.CTkFrame(self, width=230)
         self.dashboard.pack(side="left", fill="y")
         
+        
         self.root = ctk.CTkFrame(self, fg_color="transparent")
         self.root.pack(fill="both", expand=True)
         Home(root=self.root)

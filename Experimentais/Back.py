@@ -16,7 +16,7 @@ def caminho_usuario():
 caminho_json = caminho_usuario()
 
 
-def openPath(self):
+def openPath(self, model = False):
     print("JSON:", caminho_json)
 
     if not os.path.exists(caminho_json):
@@ -45,11 +45,14 @@ def openPath(self):
         dados = pd.read_excel(caminho_planilha, sheet_name=None)
 
         dadosFormatados = []
-
+        
         for sheet, data in dados.items():
             data = data.loc[:, ~data.columns.str.contains('^Unnamed')]
 
+            
             if data.columns.tolist() == ["Aluno", "Data Marcada", "Data de Experiencia", "Horário", "Contato", "Status"]:
+                if model: return [sheet.capitalize() for sheet in dados.keys() if sheet.strip()]
+                
                 for index, row in data.iterrows():
                     aluno = Aluno(
                         nome=row["Aluno"],
@@ -62,6 +65,7 @@ def openPath(self):
                         row=index + 2
                     )
                     dadosFormatados.append(aluno)
+                    
 
         return dadosFormatados
 
