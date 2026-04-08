@@ -1,12 +1,10 @@
 import os
-from tkinter import ttk
-from GUI.Home.view import Home
+from src.GUI.Home.view import Home
 import customtkinter as ctk
-import tkinter as tk
-from Back import openPath, savePath
-from tkcalendar import Calendar, DateEntry
-from datetime import datetime
+from Back import openPath, savePath, caminho_usuario
 
+
+caminho_json = caminho_usuario() 
 
 class Janela(ctk.CTk):
     def __init__(self):
@@ -14,15 +12,21 @@ class Janela(ctk.CTk):
 
         self.title("Leitor de Planilha")
         
-        if not os.path.exists('Experimentais/caminho.json'):  
-            self.geometry("400x200")
-            self.label = ctk.CTkLabel(self, text="Selecione a planilha para começar.")
-            self.label.pack(pady=20)
+        if os.path.exists(caminho_json):
+            with open(caminho_json, 'r') as f:
+                conteudo = f.read()
 
-            self.button = ctk.CTkButton(self, text="Clique Aqui", command=lambda: (savePath(self=self), self.label.configure(text="Planilha carregada com sucesso!"), self.button.pack_forget(), self.home()))
-            self.button.pack(pady=10)
-            return
-        self.home()
+                if conteudo.strip():
+                    self.home()
+                    return
+             
+        self.geometry("400x200")
+        self.label = ctk.CTkLabel(self, text="Selecione a planilha para começar.")
+        self.label.pack(pady=20)
+
+        self.button = ctk.CTkButton(self, text="Clique Aqui", command=lambda: (savePath(self=self), self.label.configure(text="Planilha carregada com sucesso!"), self.button.pack_forget(), self.home()))
+        self.button.pack(pady=10)
+        return
 
     
     def home(self):
