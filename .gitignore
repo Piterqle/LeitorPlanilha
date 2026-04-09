@@ -1,4 +1,7 @@
 caminho.json
 .venv/
+build/
+dist/
+*.spec
 __pycache__/
-/__pycache__/
+*.pyc

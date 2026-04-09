@@ -1,8 +1,15 @@
 import os
+import sys
 from src.GUI.Home.view import Home
 import customtkinter as ctk
 from Back import openPath, savePath, caminho_usuario
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 caminho_json = caminho_usuario() 
 
@@ -11,7 +18,7 @@ class Janela(ctk.CTk):
         super().__init__()
 
         self.title("Leitor de Planilha")
-        
+        self.iconbitmap(bitmap=resource_path("Assets/Icon/Icon.ico"))
         if os.path.exists(caminho_json):
             with open(caminho_json, 'r') as f:
                 conteudo = f.read()
