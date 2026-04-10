@@ -14,7 +14,7 @@ class Home(ctk.CTk):
         self.dados = None
         
         self.dias_pt = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"]
-        self.modalidadeList = openPath(self=self, model=True)
+        self.modalidadeList = openPath(model=True)
         self.home()
     
     
