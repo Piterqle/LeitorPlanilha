@@ -82,7 +82,7 @@ class Home(ctk.CTk):
     
     # Criação de Linhas
     def createRows(self):
-        self.dados = openPath(self=self);
+        self.dados = openPath();
         if(len(self.dados) > 0):
             for i, row in enumerate(self.dados):
                 #if row[2].strftime("%d/%m/%Y") == datetime.now().strftime("%d/%m/%Y"):
@@ -98,7 +98,7 @@ class Home(ctk.CTk):
                 label_modalidade.grid(row=linha, column=2, padx=(15, 5), pady=5, sticky="ew")
                 
                 # Verificando se row[2] é datetime ou string
-                label_dataAtual = ctk.CTkLabel(self.frameLinhas, text=row.data_marcada, anchor="w")
+                label_dataAtual = ctk.CTkLabel(self.frameLinhas, text=row.data_procura, anchor="w")
                 label_dataAtual.grid(row=linha, column=3, padx=(15, 5),  pady=5, sticky="ew")
                 
                 # Verificando se row[3] é datetime ou string

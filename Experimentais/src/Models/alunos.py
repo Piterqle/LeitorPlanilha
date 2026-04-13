@@ -5,7 +5,7 @@ from dataclasses import dataclass
 class Aluno:
     nome: str
     modalidade: str
-    data_marcada: str
+    data_procura: str
     data_experiencia: str
     horario: str
     numero_telefone: str

@@ -18,7 +18,7 @@ class Janela(ctk.CTk):
         super().__init__()
 
         self.title("Leitor de Planilha")
-        self.iconbitmap(bitmap=resource_path("Assets/Icon/Icon.ico"))
+        #self.iconbitmap(bitmap=resource_path("Assets/Icon/Icon.ico"))
         if os.path.exists(caminho_json):
             with open(caminho_json, 'r') as f:
                 conteudo = f.read()

@@ -1,3 +1,5 @@
+import sys
+
 from flask import json
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter, range_boundaries
@@ -5,8 +7,16 @@ from datetime import datetime
 import customtkinter as ctk
 import os 
 
-base_dir = os.getcwd()
-caminho_json = os.path.join(base_dir, 'Assets/caminho.json')
+
+def caminho_usuario():
+    pasta = os.path.join(os.path.expanduser("~"), "AppData", "Local", "Experimentais")
+    os.makedirs(pasta, exist_ok=True)
+    return os.path.join(pasta, "caminho.json")
+
+
+caminho_json = caminho_usuario()
+
+dias_pt = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"]
 
 def insert_Str(liststr , insert_format):
     insert_format.sort(key=lambda x: x[0], reverse=True)
@@ -29,8 +39,8 @@ class alunoController():
     
     def addAluno(self):
         try:
-            [aluno, modalidade, data_marcada, data_experiencia, horario, contato, status] = [value.get() for value in self.entrys]
-            if [aluno, modalidade, data_marcada, data_experiencia, horario, contato, status].count("") > 0:
+            [aluno, modalidade, data_procura, data_experiencia, horario, contato, status] = [value.get() for value in self.entrys]
+            if [aluno, modalidade, data_procura, data_experiencia, horario, contato, status].count("") > 0:
                 print("Preencha todos os campos.")
                 return
             
@@ -56,12 +66,12 @@ class alunoController():
                     workbook = load_workbook(caminho["Planilha"])
                     worksheet = workbook[modalidade.upper()]
                     
-                    new_row = [aluno, data_marcada, data_experiencia, horario, contato, status]
+                    new_row = [aluno, data_procura, data_experiencia, dias_pt[datetime.strptime(data_experiencia, "%d/%m/%Y").weekday()].upper(), horario, contato, status]
                     worksheet.append(new_row)
                     
                     if worksheet.tables:
                         table = list(worksheet.tables.values())[0]
-                        table.ref = f"A1:F{worksheet.max_row}"
+                        table.ref = f"A1:G{worksheet.max_row}"
 
                     workbook.save(caminho["Planilha"])
                     self.next()
