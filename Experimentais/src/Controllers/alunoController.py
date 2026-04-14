@@ -28,10 +28,9 @@ def insert_Str(liststr , insert_format):
 
 
 class alunoController():
-    def __init__(self, entrys=None, buttons=None, next=None, dados=None, id=None):
+    def __init__(self, entrys=None, buttons=None, dados=None, id=None):
         self.entrys = entrys
         self.buttons = buttons
-        self.next = next
         self.dados = dados
         self.id = id
 
@@ -74,7 +73,11 @@ class alunoController():
                         table.ref = f"A1:G{worksheet.max_row}"
 
                     workbook.save(caminho["Planilha"])
-                    self.next()
+            
+            for entry in self.entrys:
+                if isinstance(entry, ctk.CTkEntry):
+                    entry.delete(0, ctk.END)
+            return      
                     
         except Exception as e:
             
@@ -137,7 +140,7 @@ class alunoController():
                         worksheet.cell(row=self.dados[int(self.id)-1].row, column=col_num, value=value)
                     
                     workbook.save(caminho["Planilha"])
-                    self.next()
+                   
             
                     for entry in self.entrys:
                         if isinstance(entry, ctk.CTkEntry):
@@ -145,6 +148,8 @@ class alunoController():
                 
                     self.buttons[1].configure(text="Excluir", command=lambda: self.deletarAluno())
                     self.buttons[0].configure(fg_color="#d4b350", hover_color="#b38600", text="Editar",command=lambda: self.editarAluno())
+                    
+                    return
                     
         except Exception as e:
             
@@ -182,7 +187,7 @@ class alunoController():
                         table.ref = f"A1:F{worksheet.max_row}"
                     
                     workbook.save(caminho["Planilha"])
-                self.next()
+                    return
          
         except Exception as e:
             

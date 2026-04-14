@@ -10,13 +10,14 @@ from datetime import datetime
 class Home(ctk.CTk):
     
     def __init__(self, root):
+        super().__init__()
         self.root = root
         self.dados = None
         
         self.dias_pt = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"]
         self.modalidadeList = openPath(model=True)
+        
         self.home()
-    
     
     # Função de Focus
     def on_focus_in(self, event):
@@ -33,6 +34,10 @@ class Home(ctk.CTk):
         if isinstance(event.widget, ctk.CTkEntry):
             event.widget.configure(border_color="gray")
 
+    def atualizarRows(self):
+        print("Atualizando dados...")
+        self.createRows()
+        self.after(60000, self.atualizarRows)  # Atualiza a cada 5 minutos
     
     # Função para abrir o calendário
     def open_calendar(self):
@@ -83,6 +88,8 @@ class Home(ctk.CTk):
     # Criação de Linhas
     def createRows(self):
         self.dados = openPath();
+        for widget in self.frameLinhas.winfo_children():
+            widget.destroy()
         if(len(self.dados) > 0):
             for i, row in enumerate(self.dados):
                 #if row[2].strftime("%d/%m/%Y") == datetime.now().strftime("%d/%m/%Y"):
@@ -223,7 +230,7 @@ class Home(ctk.CTk):
         self.statusEntry.bind("<Return>", lambda e: self.contactEntry.focus())
     
         
-        self.buttonAdd = ctk.CTkButton(self.entryContainer, text="Adicionar Aluno", height=30, command=lambda: alunoController(
+        self.buttonAdd = ctk.CTkButton(self.entryContainer, text="Adicionar Aluno", height=30, command=lambda: (alunoController(
             entrys=[
                 self.nameEntry,
                 self.modalidadeEntry,
@@ -232,9 +239,8 @@ class Home(ctk.CTk):
                 self.timeEntry,
                 self.contactEntry,
                 self.statusEntry
-            ],
-            next=self.createRows
-        ).addAluno())
+            ]
+        ).addAluno(), self.createRows()))
         self.buttonAdd.grid(row=3, column=3, padx=8, pady=(0,15), sticky="ew")
         
         # Separador do Edit
@@ -268,12 +274,12 @@ class Home(ctk.CTk):
         
         
         # Button Edit 
-        self.buttonEdit = ctk.CTkButton(self.entryContainer, text="Editar Aluno", height=30, fg_color="#d4b350", hover_color="#b38600", command=lambda: alunoController(dados=self.dados, id=self.IdEntry.get(), entrys=entryList, buttons=listButtons, next=self.createRows).editarAluno())
+        self.buttonEdit = ctk.CTkButton(self.entryContainer, text="Editar Aluno", height=30, fg_color="#d4b350", hover_color="#b38600", command=lambda: (alunoController(dados=self.dados, id=self.IdEntry.get(), entrys=entryList, buttons=listButtons).editarAluno(), self.createRows()))
         self.buttonEdit.grid(row=6, column=1, padx=8, pady=(0,15), sticky="ew")
         
         
         # Button Delete 
-        self.buttonDelete = ctk.CTkButton(self.entryContainer, text="Deletar Aluno", height=30, fg_color="#ab3027", hover_color="#75201a", command=lambda: alunoController(dados=self.dados, id=self.IdEntry.get(), next=self.createRows).deletarAluno())
+        self.buttonDelete = ctk.CTkButton(self.entryContainer, text="Deletar Aluno", height=30, fg_color="#ab3027", hover_color="#75201a", command=lambda: (alunoController(dados=self.dados, id=self.IdEntry.get(),).deletarAluno(), self.createRows()))
         self.buttonDelete.grid(row=6, column=2, padx=8, pady=(0,15), sticky="ew")
            
         listButtons = [self.buttonEdit, self.buttonDelete]
@@ -340,4 +346,8 @@ class Home(ctk.CTk):
         spacer.grid(row=0, column=len(self.headers)+1)
         
         self.createRows()
+        
+        if not hasattr(self, 'auto_update_started'):
+            self.auto_update_started = True
+            self.atualizarRows()
 

@@ -65,7 +65,7 @@ def openPath(model = False, condition = True):
                     pass
                 
                 for index, row in data.iterrows():
-                    print(row)
+                
                     if condition: 
                         aluno = Aluno(
                             nome=row["Nome"],
