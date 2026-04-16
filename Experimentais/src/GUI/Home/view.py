@@ -4,6 +4,8 @@ from Back import openPath, savePath
 from src.Controllers.alunoController import alunoController
 from tkcalendar import Calendar, DateEntry
 from datetime import datetime
+from src.Components.Feedback.toast import Feedback
+from src.Components.TopLevel.toplevel import TopLevel
 
 
 
@@ -18,6 +20,22 @@ class Home(ctk.CTk):
         self.modalidadeList = openPath(model=True)
         
         self.home()
+    
+    def confirmar_acao(self, acao):
+        confirmar = TopLevel(self.root, mensagem=f"Deseja realmente {acao} este aluno?")
+        confirmar.topLevel()
+        if not confirmar.result:
+            return 
+        
+        if acao == "deletar":
+            alunoController(dados=self.dados, id=self.IdEntry.get(),).deletarAluno(), 
+            self.createRows(), 
+            Feedback(self.root, mensagem="Aluno deletado com sucesso!").toast()
+        elif acao == "atualizar":
+            alunoController(dados=self.dados, id=self.IdEntry.get(), entrys=self.entryList, buttons=self.listButtons).editarAluno(), 
+            self.createRows()
+                
+        
     
     # Função de Focus
     def on_focus_in(self, event):
@@ -135,6 +153,7 @@ class Home(ctk.CTk):
         self.header = ctk.CTkFrame(self.root, height=50, fg_color="transparent", border_width=1, corner_radius=0)
         self.header.pack(fill="x")
 
+        
         self.header_label = ctk.CTkLabel(
             self.header,
             text="Planilha Alunos Experimentais",
@@ -264,7 +283,7 @@ class Home(ctk.CTk):
         self.IdEntry.grid(row=6, column=0, padx=8, pady=(0,15), sticky="ew")
         
         
-        entryList = [self.nameEntry,
+        self.entryList = [self.nameEntry,
             self.modalidadeEntry,
             self.dateNowEntry,
             self.dateMarkedEntry,
@@ -274,15 +293,25 @@ class Home(ctk.CTk):
         
         
         # Button Edit 
-        self.buttonEdit = ctk.CTkButton(self.entryContainer, text="Editar Aluno", height=30, fg_color="#d4b350", hover_color="#b38600", command=lambda: (alunoController(dados=self.dados, id=self.IdEntry.get(), entrys=entryList, buttons=listButtons).editarAluno(), self.createRows()))
+        self.buttonEdit = ctk.CTkButton(self.entryContainer, 
+                                        text="Editar Aluno", 
+                                        height=30, 
+                                        fg_color="#d4b350", 
+                                        hover_color="#b38600", 
+                                        command=lambda: (self.confirmar_acao("atualizar")))
         self.buttonEdit.grid(row=6, column=1, padx=8, pady=(0,15), sticky="ew")
         
         
         # Button Delete 
-        self.buttonDelete = ctk.CTkButton(self.entryContainer, text="Deletar Aluno", height=30, fg_color="#ab3027", hover_color="#75201a", command=lambda: (alunoController(dados=self.dados, id=self.IdEntry.get(),).deletarAluno(), self.createRows()))
+        self.buttonDelete = ctk.CTkButton(self.entryContainer, 
+                                          text="Deletar Aluno", 
+                                          height=30, fg_color="#ab3027", 
+                                          hover_color="#75201a", 
+                                          command=lambda: (self.confirmar_acao("deletar"))) 
+        
         self.buttonDelete.grid(row=6, column=2, padx=8, pady=(0,15), sticky="ew")
            
-        listButtons = [self.buttonEdit, self.buttonDelete]
+        self.listButtons = [self.buttonEdit, self.buttonDelete]
         
         # Frame da Tabela
         self.tableContainer = ctk.CTkFrame(self.root, fg_color="transparent")
@@ -346,7 +375,7 @@ class Home(ctk.CTk):
         spacer.grid(row=0, column=len(self.headers)+1)
         
         self.createRows()
-        
+        Feedback(self.root, mensagem="Dados atualizados!").toast()
         if not hasattr(self, 'auto_update_started'):
             self.auto_update_started = True
             self.atualizarRows()
