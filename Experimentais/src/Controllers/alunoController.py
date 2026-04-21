@@ -35,7 +35,7 @@ class alunoController():
         self.buttons = buttons
         self.dados = dados
         self.id = id
-
+        
         pass
     
     def addAluno(self):
@@ -104,16 +104,15 @@ class alunoController():
             elif isinstance(self.entrys[i], ctk.CTkComboBox):
                 self.entrys[i].set(value.capitalize())
         
-        self.buttons[0].configure(hover_color="#2a632c", fg_color="#3ad63a", text="Salvar",command=lambda: self.salvarEdicao())
-        self.buttons[1].configure(text="Cancelar", command=lambda: self.cancelarEdicao())
 
-    def salvarEdicao(self):
+    def salvarEdicao(self, next):
         try:
             with open(caminho_json, 'r') as f:
                 caminho = f.read()
                 if caminho != "":
                     caminho = json.loads(caminho)
                     
+                    print("Editando...")
                     workbook = load_workbook(caminho["Planilha"])
                     modalidade = self.entrys[1].get()
                     worksheet = workbook[modalidade.upper()]
@@ -121,14 +120,17 @@ class alunoController():
                     new_row = []
                     
                     for i, entry in enumerate(self.entrys):
-                        
+                        print(i, entry)
                         if i == 7: break; # Ignorar o campo row
                         if i == 1: continue; # Ignorar o campo modalidade
+                        
+                        
                         
                         if isinstance(entry, ctk.CTkEntry):
                             if entry.get() == "":
                                 print("Preencha todos os campos.")
                                 return
+                            print(entry.get())
                             new_row.append(entry.get())
                         elif isinstance(entry, ctk.CTkComboBox):
                             if entry.get() == "":
@@ -139,6 +141,7 @@ class alunoController():
                     
                     for col_num, value in enumerate(new_row, start=1):
                         if col_num == 1: pass
+                        
                         worksheet.cell(row=self.dados[int(self.id)-1].row, column=col_num, value=value)
                     
                     workbook.save(caminho["Planilha"])
@@ -148,9 +151,7 @@ class alunoController():
                         if isinstance(entry, ctk.CTkEntry):
                             entry.delete(0, ctk.END)
                 
-                    self.buttons[1].configure(text="Excluir", command=lambda: self.deletarAluno())
-                    self.buttons[0].configure(fg_color="#d4b350", hover_color="#b38600", text="Editar",command=lambda: self.editarAluno())
-                    
+                    next
                     return
                     
         except Exception as e:
@@ -189,6 +190,7 @@ class alunoController():
                         table.ref = f"A1:F{worksheet.max_row}"
                     
                     workbook.save(caminho["Planilha"])
+                    self.next()
                     return
          
         except Exception as e:

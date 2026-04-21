@@ -1,8 +1,8 @@
 import customtkinter as ctk
 import tkinter as tk
-from Back import openPath, savePath
+from Back import openPath
 from src.Controllers.alunoController import alunoController
-from tkcalendar import Calendar, DateEntry
+from tkcalendar import Calendar
 from datetime import datetime
 from src.Components.Feedback.toast import Feedback
 from src.Components.TopLevel.toplevel import TopLevel
@@ -21,21 +21,19 @@ class Home(ctk.CTk):
         
         self.home()
     
-    def confirmar_acao(self, acao):
-        confirmar = TopLevel(self.root, mensagem=f"Deseja realmente {acao} este aluno?")
-        confirmar.topLevel()
-        if not confirmar.result:
-            return 
-        
-        if acao == "deletar":
-            alunoController(dados=self.dados, id=self.IdEntry.get(),).deletarAluno(), 
-            self.createRows(), 
-            Feedback(self.root, mensagem="Aluno deletado com sucesso!").toast()
-        elif acao == "atualizar":
-            alunoController(dados=self.dados, id=self.IdEntry.get(), entrys=self.entryList, buttons=self.listButtons).editarAluno(), 
-            self.createRows()
-                
-        
+    def confirmarAcao(self, acao, mensagem):
+        if acao == "editar":
+            aluno = alunoController(dados=self.dados, id=self.IdEntry.get(), entrys=self.entryList, buttons=self.listButtons)
+            aluno.editarAluno()
+            
+            result = TopLevel(root=self.root, type="Editar", mensagem=mensagem)
+            result.topLevel()
+            if result.result:           
+                aluno.salvarEdicao(next=self.createRows())
+        elif acao == "deletar":
+            TopLevel(root=self.root, type="Deletar", mensagem=mensagem).topLevel()
+            alunoController(dados=self.dados, id=self.IdEntry.get()).deletarAluno()
+            
     
     # Função de Focus
     def on_focus_in(self, event):
@@ -298,7 +296,7 @@ class Home(ctk.CTk):
                                         height=30, 
                                         fg_color="#d4b350", 
                                         hover_color="#b38600", 
-                                        command=lambda: (self.confirmar_acao("atualizar")))
+                                        command=lambda: (self.confirmarAcao("editar", "Confirmação de Edição: Tem certeza que deseja editar os dados deste aluno?") ))
         self.buttonEdit.grid(row=6, column=1, padx=8, pady=(0,15), sticky="ew")
         
         
@@ -307,7 +305,7 @@ class Home(ctk.CTk):
                                           text="Deletar Aluno", 
                                           height=30, fg_color="#ab3027", 
                                           hover_color="#75201a", 
-                                          command=lambda: (self.confirmar_acao("deletar"))) 
+                                          command=lambda: (alunoController(dados=self.dados, id=self.IdEntry.get()).deletarAluno()))
         
         self.buttonDelete.grid(row=6, column=2, padx=8, pady=(0,15), sticky="ew")
            
@@ -375,7 +373,7 @@ class Home(ctk.CTk):
         spacer.grid(row=0, column=len(self.headers)+1)
         
         self.createRows()
-        Feedback(self.root, mensagem="Dados atualizados!").toast()
+
         if not hasattr(self, 'auto_update_started'):
             self.auto_update_started = True
             self.atualizarRows()

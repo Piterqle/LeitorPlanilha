@@ -43,11 +43,19 @@ class Janela(ctk.CTk):
             widget.destroy()    
         self.dashboard = ctk.CTkFrame(self, width=230)
         self.dashboard.pack(side="left", fill="y")
-        
+        self.dashboard.pack_propagate(False)
         
         self.root = ctk.CTkFrame(self, fg_color="transparent")
         self.root.pack(fill="both", expand=True)
-        Home(root=self.root)
+        
+        self.dashboard_label = ctk.CTkLabel(self.dashboard, text="Dashboard", font=ctk.CTkFont(size=20, weight="bold"))
+        self.dashboard_label.pack(pady=10)
+
+        self.button_home = ctk.CTkButton(self.dashboard, text="🏡 Home", font=("Arial", 14),width=200, height=50,fg_color="transparent", hover_color="#333333", command=lambda: Home(root=self.root))
+        self.button_home.pack(pady=10, fill="x",)
+        
+
+        
     
         
 

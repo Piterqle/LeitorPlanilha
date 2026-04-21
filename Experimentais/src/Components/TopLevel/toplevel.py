@@ -6,10 +6,12 @@ class TopLevel(ctk.CTkToplevel):
         super().__init__(root)
         self.root = root
         self.mensagem = mensagem
-        self.result = False
+
         
 
     def topLevel(self):
+        self.result = False
+        
         self.geometry("350x200")
         self.title("Feedback")
         self.resizable(False, False)
@@ -38,4 +40,6 @@ class TopLevel(ctk.CTkToplevel):
         
         self.grab_set()
         self.wait_window()
+    
+
         
