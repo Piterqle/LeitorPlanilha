@@ -7,6 +7,7 @@ class Aluno:
     modalidade: str
     data_procura: str
     data_experiencia: str
+    dia_semana: str
     horario: str
     numero_telefone: str
     status: str

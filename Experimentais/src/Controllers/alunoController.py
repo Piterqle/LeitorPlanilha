@@ -95,14 +95,16 @@ class alunoController():
         # Preencher os campos com os dados  
         aluno = self.dados[int(self.id)-1]
         for i, value in enumerate(aluno.__dict__.values()): 
-            
+            j = i
+            if i > 4: j -= 1 # Ignorar o campo modalidade
             if i == 7: break; # Ignorar o campo row
+    
             
-            if isinstance(self.entrys[i], ctk.CTkEntry):
-                self.entrys[i].delete(0, ctk.END)
-                self.entrys[i].insert(0, value)
-            elif isinstance(self.entrys[i], ctk.CTkComboBox):
-                self.entrys[i].set(value.capitalize())
+            if isinstance(self.entrys[j], ctk.CTkEntry):
+                self.entrys[j].delete(0, ctk.END)
+                self.entrys[j].insert(0, value)
+            elif isinstance(self.entrys[j], ctk.CTkComboBox):
+                self.entrys[j].set(value.capitalize())
         
 
     def salvarEdicao(self, next):
@@ -139,10 +141,14 @@ class alunoController():
                             new_row.append(entry.get())
                     
                     
+                    new_row.insert(3, dias_pt[datetime.strptime(new_row[2], "%d/%m/%Y").weekday()].capitalize()) # Inserir o dia da semana com base na data de experiência
                     for col_num, value in enumerate(new_row, start=1):
                         if col_num == 1: pass
                         
+                        
+                        
                         worksheet.cell(row=self.dados[int(self.id)-1].row, column=col_num, value=value)
+                        
                     
                     workbook.save(caminho["Planilha"])
                    
@@ -151,7 +157,7 @@ class alunoController():
                         if isinstance(entry, ctk.CTkEntry):
                             entry.delete(0, ctk.END)
                 
-                    next
+                    next()
                     return
                     
         except Exception as e:

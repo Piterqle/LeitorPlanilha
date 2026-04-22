@@ -18,14 +18,19 @@ class Home(ctk.CTk):
         
         self.dias_pt = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"]
         self.modalidadeList = openPath(model=True)
+        self.count = 0
         
         self.home()
     
     def confirmarAcao(self, acao, mensagem):
         if acao == "editar":
             aluno = alunoController(dados=self.dados, id=self.IdEntry.get(), entrys=self.entryList, buttons=self.listButtons)
-            aluno.editarAluno()
+            if self.count == 0:
+                aluno.editarAluno()
+                self.count += 1
+                return
             
+            self.count = 0
             result = TopLevel(root=self.root, type="Editar", mensagem=mensagem)
             result.topLevel()
             if result.result:           
