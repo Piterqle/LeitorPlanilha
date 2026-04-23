@@ -21,23 +21,25 @@ class Home(ctk.CTk):
         self.count = 0
         
         self.home()
-    
+
     def confirmarAcao(self, acao, mensagem):
+        if self.IdEntry.get() == "": return
+        result = TopLevel(root=self.root, type="Editar", mensagem=mensagem)
         if acao == "editar":
-            aluno = alunoController(dados=self.dados, id=self.IdEntry.get(), entrys=self.entryList, buttons=self.listButtons)
+            aluno = alunoController(dados=self.dados, id=self.IdEntry.get(), entrys=self.entryList, buttons=self.listButtons, next=self.createRows)
             if self.count == 0:
                 aluno.editarAluno()
                 self.count += 1
                 return
             
             self.count = 0
-            result = TopLevel(root=self.root, type="Editar", mensagem=mensagem)
             result.topLevel()
             if result.result:           
-                aluno.salvarEdicao(next=self.createRows())
+                aluno.salvarEdicao()
         elif acao == "deletar":
-            TopLevel(root=self.root, type="Deletar", mensagem=mensagem).topLevel()
-            alunoController(dados=self.dados, id=self.IdEntry.get()).deletarAluno()
+            result.topLevel()
+            if result.result:
+                alunoController(dados=self.dados, id=self.IdEntry.get(), next=self.createRows).deletarAluno()
             
     
     # Função de Focus
@@ -310,7 +312,7 @@ class Home(ctk.CTk):
                                           text="Deletar Aluno", 
                                           height=30, fg_color="#ab3027", 
                                           hover_color="#75201a", 
-                                          command=lambda: (alunoController(dados=self.dados, id=self.IdEntry.get()).deletarAluno()))
+                                          command=lambda: (self.confirmarAcao("deletar", "Confirmação de Exclusão: Tem certeza que deseja deletar este aluno?") ))
         
         self.buttonDelete.grid(row=6, column=2, padx=8, pady=(0,15), sticky="ew")
            

@@ -30,11 +30,12 @@ def insert_Str(liststr , insert_format):
 
 
 class alunoController():
-    def __init__(self, entrys=None, buttons=None, dados=None, id=None):
+    def __init__(self, entrys=None, buttons=None, dados=None, id=None, next=None):
         self.entrys = entrys
         self.buttons = buttons
         self.dados = dados
         self.id = id
+        self.next = next
         
         pass
     
@@ -107,7 +108,7 @@ class alunoController():
                 self.entrys[j].set(value.capitalize())
         
 
-    def salvarEdicao(self, next):
+    def salvarEdicao(self):
         try:
             with open(caminho_json, 'r') as f:
                 caminho = f.read()
@@ -122,7 +123,7 @@ class alunoController():
                     new_row = []
                     
                     for i, entry in enumerate(self.entrys):
-                        print(i, entry)
+                        
                         if i == 7: break; # Ignorar o campo row
                         if i == 1: continue; # Ignorar o campo modalidade
                         
@@ -132,7 +133,6 @@ class alunoController():
                             if entry.get() == "":
                                 print("Preencha todos os campos.")
                                 return
-                            print(entry.get())
                             new_row.append(entry.get())
                         elif isinstance(entry, ctk.CTkComboBox):
                             if entry.get() == "":
@@ -157,7 +157,7 @@ class alunoController():
                         if isinstance(entry, ctk.CTkEntry):
                             entry.delete(0, ctk.END)
                 
-                    next()
+                    self.next()
                     return
                     
         except Exception as e:
