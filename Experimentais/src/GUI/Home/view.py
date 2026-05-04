@@ -110,12 +110,11 @@ class Home(ctk.CTk):
     
     # Criação de Linhas
     def createRows(self):
-        self.dados = openPath();
+        self.dados = openPath(condition="Date");
         for widget in self.frameLinhas.winfo_children():
             widget.destroy()
         if(len(self.dados) > 0):
             for i, row in enumerate(self.dados):
-                #if row[2].strftime("%d/%m/%Y") == datetime.now().strftime("%d/%m/%Y"):
                 linha = i * 2
                 
                 label_Id = ctk.CTkLabel(self.frameLinhas, text=i+1)
@@ -309,7 +308,7 @@ class Home(ctk.CTk):
         
         # Button Delete 
         self.buttonDelete = ctk.CTkButton(self.entryContainer, 
-                                          text="Deletar Aluno", 
+                                          text="Deletar Aluno",                     
                                           height=30, fg_color="#ab3027", 
                                           hover_color="#75201a", 
                                           command=lambda: (self.confirmarAcao("deletar", "Confirmação de Exclusão: Tem certeza que deseja deletar este aluno?") ))

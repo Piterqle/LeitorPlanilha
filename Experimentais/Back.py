@@ -23,7 +23,7 @@ def formatar_data(data):
     else:
         return 
 
-def openPath(model = False, condition = True):
+def openPath(model = False, condition = "All"):
     print("JSON:", caminho_json)
 
     if not os.path.exists(caminho_json):
@@ -60,26 +60,31 @@ def openPath(model = False, condition = True):
             data.dropna(how='all', inplace=True)
                         
             if data.columns.tolist() == ["Nome", "Data da Procura", "Data de Experiência", "Semana","Horário", "Contato", "Status"]:
+                print(f"Planilha '{sheet}' carregada com sucesso!")
                 if model: 
                     sheets.append(sheet.capitalize()) 
                     pass
                 
                 for index, row in data.iterrows():
                 
-                    if condition: 
-                        aluno = Aluno(
-                            nome=row["Nome"],
-                            modalidade=sheet,
-                            data_procura=row["Data da Procura"] if isinstance(row["Data da Procura"], str) else row["Data da Procura"].strftime("%d/%m/%Y"),
-                            data_experiencia=row["Data de Experiência"] if isinstance(row["Data de Experiência"], str) else row["Data de Experiência"].strftime("%d/%m/%Y"),
-                            dia_semana=row["Semana"],
-                            horario=row["Horário"],
-                            numero_telefone=row["Contato"],
-                            status=row["Status"],
-                            row=index + 2
-                        )
-                        dadosFormatados.append(aluno)
-                    
+                
+                    aluno = Aluno(
+                        nome=row["Nome"],
+                        modalidade=sheet,
+                        data_procura=row["Data da Procura"] if isinstance(row["Data da Procura"], str) else row["Data da Procura"].strftime("%d/%m/%Y"),
+                        data_experiencia=row["Data de Experiência"] if isinstance(row["Data de Experiência"], str) else row["Data de Experiência"].strftime("%d/%m/%Y"),
+                        dia_semana=row["Semana"],
+                        horario=row["Horário"],
+                        numero_telefone=row["Contato"],
+                        status=row["Status"],
+                        row=index + 2
+                    )
+                    match condition:
+                        case "Date":
+                            if aluno.data_experiencia == formatar_data(pd.Timestamp.now()):
+                                dadosFormatados.append(aluno)
+                        case "All":
+                            dadosFormatados.append(aluno)
         if model: return sheets
         return dadosFormatados
 
